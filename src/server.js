@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 const routes = require('./routes');
 
@@ -24,6 +25,7 @@ try {
     console.log(error);
 }
 
+app.use('/files', express.static(path.resolve()))
 app.use(routes);
 
 app.listen(PORT, ()=>{
