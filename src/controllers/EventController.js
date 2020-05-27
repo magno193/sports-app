@@ -37,5 +37,18 @@ module.exports = {
             }
         } catch (error) {
             return res.status(400).json({ message: 'Event does not exist!'});        }
+    },
+
+    async getAllEvents(req, res) {
+        try {
+            const events = await Event.find({});
+
+            if(events) {
+                return res.json(events);
+            }
+
+        } catch (error) {
+            return res.status(400).json({ message: `We don't have any events yet` });
+        }
     }
 }
