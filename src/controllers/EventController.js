@@ -53,5 +53,16 @@ module.exports = {
         } catch (error) {
             return res.status(400).json({ message: `We don't have any events yet` });
         }
+    },
+
+    async delete(req, res) {
+        const { eventId } = req.params;
+
+        try {
+            await Event.findByIdAndDelete(eventId)
+            return res.status(204);
+        } catch (error) {
+            return res.status(400).json({message: `We don't have any events with that id` })
+        }
     }
 }

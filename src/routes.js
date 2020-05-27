@@ -18,9 +18,10 @@ routes.get('/events', EventController.getAllEvents);
 routes.get('/events/:sport', EventController.getAllEvents);
 routes.get('/event/:eventId', EventController.getEventById);
 routes.post('/event', upload.single("thumbnail"), EventController.createEvent);
+routes.delete('/event/:eventId', EventController.delete);
 
 // User
-routes.post('/user/register', UserController.createUser);
 routes.get('/user/:userId', UserController.getUserById);
+routes.post('/user/register', UserController.createUser);
 
 module.exports = routes;
