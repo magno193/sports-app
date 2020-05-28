@@ -4,6 +4,7 @@ const multer = require('multer');
 const UserController = require('../src/controllers/UserController');
 const EventController = require('./controllers/EventController');
 const DashboardController = require('./controllers/DashboardController');
+const LoginController = require('./controllers/LoginController');
 const uploadConfig = require('./config/upload');
 
 const routes = express.Router();
@@ -13,10 +14,12 @@ routes.get('/status', (req, res) => {
     res.send({ status: 200 });
 });
 
-//TODO LoginController
 //TODO SubscribeController
 //TODO ApprovalController
 //TODO RejectionController
+
+// Login
+routes.post('/login', LoginController.store);
 
 // Dashboard
 routes.get('/dashboard', DashboardController.getAllEvents);
