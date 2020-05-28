@@ -5,6 +5,7 @@ const UserController = require('../src/controllers/UserController');
 const EventController = require('./controllers/EventController');
 const DashboardController = require('./controllers/DashboardController');
 const LoginController = require('./controllers/LoginController');
+const RegistrationController = require('./controllers/RegistrationController');
 const uploadConfig = require('./config/upload');
 
 const routes = express.Router();
@@ -14,9 +15,12 @@ routes.get('/status', (req, res) => {
     res.send({ status: 200 });
 });
 
-//TODO SubscribeController
 //TODO ApprovalController
 //TODO RejectionController
+
+// Registration
+routes.post('/registration/:eventId', RegistrationController.create);
+routes.get('/registration/:registrationId', RegistrationController.getRegistration);
 
 // Login
 routes.post('/login', LoginController.store);
