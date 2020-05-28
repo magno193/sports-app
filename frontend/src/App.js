@@ -1,11 +1,15 @@
 import React from 'react';
+import Login from './pages/Login/'
+import Dashboard from './pages/Dashboard/'
+import {Container} from 'reactstrap'
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-          Learn the MERN Stack.
-    </div>
+    <Container>
+          <Login />
+          <Dashboard />
+    </Container>
   );
 }
 
