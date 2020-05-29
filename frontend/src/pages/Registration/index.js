@@ -11,12 +11,12 @@ export default function Registration({ history }) {
   const handleSubmit = async (event) => {
     event.preventDefault(); // cancela refresh
 
-    const response = await api.post("/login", { email, password });
+    const response = await api.post("/user/register", { email, password, firstName, lastName });
     const userId = response.data._id || false;
 
     if (userId) {
       localStorage.setItem("user", userId);
-      history.push("/login");
+      history.push("/dashboard");
     } else {
       const { message } = response.data;
     }
