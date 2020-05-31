@@ -11,7 +11,12 @@ export default function Registration({ history }) {
   const handleSubmit = async (event) => {
     event.preventDefault(); // cancela refresh
 
-    const response = await api.post("/user/register", { email, password, firstName, lastName });
+    const response = await api.post("/user/register", {
+      email,
+      password,
+      firstName,
+      lastName,
+    });
     const userId = response.data._id || false;
 
     if (userId) {
@@ -25,45 +30,54 @@ export default function Registration({ history }) {
   return (
     <Container>
       <h2>Registration</h2>
-      <p>Please <strong>Register</strong> to create a new account</p>
+      <p>
+        Please <strong>Register</strong> to create a new account
+      </p>
       <Form onSubmit={handleSubmit}>
-        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-          <Input
-            type="text"
-            name="firstName"
-            id="firstName"
-            placeholder="Your first name"
-            onChange={(event) => setFirstName(event.target.value)}
-          />
+        <div className="input-group">
+          <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+            <Input
+              type="text"
+              name="firstName"
+              id="firstName"
+              placeholder="Your first name"
+              onChange={(event) => setFirstName(event.target.value)}
+            />
+          </FormGroup>
+          <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+            <Input
+              type="text"
+              name="lastName"
+              id="lastName"
+              placeholder="Your last name"
+              onChange={(event) => setLastName(event.target.value)}
+            />
+          </FormGroup>
+          <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+            <Input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Your e-mail"
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </FormGroup>
+          <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+            <Input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Your password"
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </FormGroup>
+        </div>
+        <FormGroup>
+          <Button className="submit-btn">Submit</Button>
         </FormGroup>
-        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-          <Input
-            type="text"
-            name="lastName"
-            id="lastName"
-            placeholder="Your last name"
-            onChange={(event) => setLastName(event.target.value)}
-          />
+        <FormGroup>
+          <Button className="secondary-btn" onClick={() => history.push("/login")}> Login instead? </Button>
         </FormGroup>
-        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-          <Input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Your e-mail"
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </FormGroup>
-        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-          <Input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Your password"
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </FormGroup>
-        <Button>Submit</Button>
       </Form>
     </Container>
   );
