@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../../services/api";
-import { Button, Form, FormGroup, Label, Input, Container } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input, Container, Alert } from "reactstrap";
 
 export default function Registration({ history }) {
   const [email, setEmail] = useState("");
@@ -8,23 +8,43 @@ export default function Registration({ history }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleSubmit = async (event) => {
     event.preventDefault(); // cancela refresh
 
-    const response = await api.post("/user/register", {
-      email,
-      password,
-      firstName,
-      lastName,
-    });
-    const userId = response.data._id || false;
 
-    if (userId) {
-      localStorage.setItem("user", userId);
-      history.push("/dashboard");
+    if(email !== '' && password !== '' && firstName !== lastName){
+      const response = await api.post("/user/register", {
+        email,
+        password,
+        firstName,
+        lastName,
+      });
+      const userId = response.data._id || false;
+  
+      if (userId) {
+        localStorage.setItem("user", userId);
+        history.push("/dashboard");
+      } else {
+        const { message } = response.data;
+        setError(true);
+        setErrorMessage(message);
+        setTimeout(() => {
+          setError(false);
+          setErrorMessage('')
+        }, 2000);
+      }
     } else {
-      const { message } = response.data;
+      setError(true);
+      setErrorMessage('You need to fill all the inputs.');
+      setTimeout(() => {
+        setError(false);
+        setErrorMessage('')
+      }, 2000);
     }
+
   };
 
   return (
@@ -79,6 +99,9 @@ export default function Registration({ history }) {
           <Button className="secondary-btn" onClick={() => history.push("/login")}> Login instead? </Button>
         </FormGroup>
       </Form>
+      {error ? (
+                <Alert  className='event-validation' color='danger'>{errorMessage}</Alert>
+            ) : ''}
     </Container>
   );
 }
