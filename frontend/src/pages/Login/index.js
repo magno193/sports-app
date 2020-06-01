@@ -17,7 +17,7 @@ export default function Login({ history }) {
     try {
       if (userId) {
         localStorage.setItem("user", userId);
-        history.push("/dashboard");
+        history.push("/");
       } else {
         const { message } = response.data;
         setError(true);
@@ -27,7 +27,10 @@ export default function Login({ history }) {
           setErrorMessage("");
         }, 2000);
       }
-    } catch (error) {}
+    } catch (error) {
+      setError(true);
+      setErrorMessage('Error, the server returned an error')
+    }
   };
 
   return (
@@ -58,7 +61,7 @@ export default function Login({ history }) {
         </FormGroup>
         </div>
         <FormGroup>
-          <Button className="submit-btn">Submit</Button>
+          <Button type='submit' className="submit-btn">Submit</Button>
         </FormGroup>
         <FormGroup>
           <Button
@@ -70,7 +73,7 @@ export default function Login({ history }) {
         </FormGroup>
       </Form>
       {error ? (
-                <Alert  className='event-validation' color='danger'>Missing required information</Alert>
+                <Alert  className='event-validation' color='danger'>{errorMessage}</Alert>
             ) : ''}
     </Container>
   );

@@ -1,19 +1,25 @@
 import React, { useState, useMemo } from 'react';
 import api from '../../services/api';
-import {Container, Button, Form, FormGroup, Input, Label, Alert} from 'reactstrap';
+import {Container, Button, Form, FormGroup, Input, Label, Alert, ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap';
 import cameraIcon from '../../assets/camera.png'
 import './events.css';
 
 // EventsPage irá mostrar todos os eventos de um usuário logado
-export default function EventsPage() {
+export default function EventsPage({history}) {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [thumbnail, setThumbnail] = useState(null);
-    const [sport, setSport] = useState('');
+    const [sport, setSport] = useState('Select a Sport');
     const [date, setDate] = useState('');
-    const [errorMessage, setErrorMessage] = useState(false);
+    const [error, setError] = useState(false);
+    const [success, setSuccess] = useState(false);
+
+    const [dropdownOpen, setOpen] = useState(false);
+
+    const toggle = () => setOpen(!dropdownOpen);
+
     const preview =  useMemo(()=>{
         return thumbnail ? URL.createObjectURL(thumbnail) : null;
     }, [thumbnail])
@@ -33,12 +39,16 @@ export default function EventsPage() {
         
             try {
 
-                if (title !== '' && description !== '' && price !== '' && sport !== '' && date !== '' && thumbnail !== null) {
+                if (title !== '' && description !== '' && price !== '' && sport !== 'Select a Sport' && date !== '' && thumbnail !== null) {
                     await api.post('/event', eventData, {headers: {user_id}})
-                } else {
-                    setErrorMessage(true);
+                    setSuccess(true);
                     setTimeout(() => {
-                        setErrorMessage(false)
+                        setSuccess(false);
+                    }, 2000);
+                } else {
+                    setError(true);
+                    setTimeout(() => {
+                        setError(false);
                     }, 2000);
 
                     console.log('Missing required data');
@@ -46,14 +56,16 @@ export default function EventsPage() {
                 }
 
             } catch (error) {
-                console.log(error.message);
-                
+                console.log(error.message);  
             } 
 
         evnt.preventDefault();
         return ''
     }
 
+    const sportEventHandler = (sport) => {
+        setSport(sport)
+    } 
 
     return(
         <Container>
@@ -65,10 +77,6 @@ export default function EventsPage() {
                         <Input type='file' onChange={(evnt) => setThumbnail(evnt.target.files[0])} />
                         <img src={cameraIcon} style={{maxWidth: '50px'}} alt='Upload Icon Image' />
                     </Label>
-                </FormGroup>
-                <FormGroup>
-                    <Label>Sport</Label>
-                    <Input id='sport' type='text' value={sport} placeholder={'Sport name'} onChange={(evnt) => setSport(evnt.target.value)} />
                 </FormGroup>
                 <FormGroup>
                     <Label>Title</Label>
@@ -86,12 +94,29 @@ export default function EventsPage() {
                     <Label>Date</Label>
                     <Input id='date' type='date' value={date} onChange={(evnt) => setDate(evnt.target.value)} />
                 </FormGroup>
-                <Button type='submit'>
-                    Create Event
-                </Button>
+                <FormGroup>
+                    <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+                    <Button disabled id="caret" value={sport}>{sport}</Button>
+                    <DropdownToggle caret />
+                    <DropdownMenu>
+                        <DropdownItem onClick={() => sportEventHandler('running')}>running</DropdownItem>
+                        <DropdownItem onClick={() => sportEventHandler('cycling')}>cycling</DropdownItem>
+                        <DropdownItem onClick={() => sportEventHandler('swimming')}>swimming</DropdownItem>
+                    </DropdownMenu>
+                    </ButtonDropdown>
+                </FormGroup>
+                <FormGroup>
+                    <Button type='submit' className='submit-btn'>Create Event</Button>
+                </FormGroup>
+                <FormGroup>
+                    <Button className='secondary-btn' onClick={() => history.push("/")}>Dashboard</Button>
+                </FormGroup>
             </Form>
-            {errorMessage ? (
+            {error ? (
                 <Alert  className='event-validation' color='danger'> Missing required information</Alert>
+            ) : ''}
+            {success ? (
+                <Alert  className='event-validation' color='success'>The event was created successfully</Alert>
             ) : ''}
         </Container>
     )
